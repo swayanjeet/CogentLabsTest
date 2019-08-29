@@ -25,28 +25,27 @@ app = Flask(__name__)
 app.config.from_mapping(
         UPLOAD_FOLDER=UPLOAD_FOLDER
         )
-#app.config['UPLOAD_FOLDER'] = UPLOAD_FOLDER
 
-#app = Flask(__name__)
-@app.route('/')
+@app.route('/heartbeat')
 def test():
-    return "Hello"
+    return {"message":"beating","STATUS":"SUCCESS"}
 
 @app.route('/uploadFile', methods=['POST'])
 def upload_file():
+    return_dict = {"message":None, "STATUS":None}
     if request.method == 'POST':
         logging.info("Inside POST request")
         # check if the post request has the file part
         logging.info(str(request.files))
         if 'file' not in request.files:
             logging.info("File not present in POST request")
-            return "No Files in request"
+            return {"message":"file key not found in request","STATUS":"FAILED"}
         file = request.files['file']
         # if user does not select file, browser also
         # submit an empty part without filename
         if file.filename == '':
             logging.info("File not present")
-            return "No Selected File"
+            return {"message":"Empty file received","STATUS":"FAILED"}
         if file and allowed_file(file.filename):
             logging.info("File is {}".format(str(file)))
             filename = secure_filename(file.filename)
@@ -57,7 +56,7 @@ def upload_file():
             packet[unique_id]=os.path.join(app.config['UPLOAD_FOLDER'], filename)
             logging.info("Image Packet is {}".format(packet))
             insert_image_into_processing_queue(packet)
-            return "File Uploaded"
+            return {"message":"File Uploaded successfully !!","STATUS":"SUCCESS"}
 
 if __name__ == '__main__':
     app.run(host='0.0.0.0',port='8080')

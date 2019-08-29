@@ -2,14 +2,14 @@ version: '3.7'
 services:
     redis:
         image: 'redis:5.0.5-alpine'
-        ports:
-            - '6379:6379'
         deploy:
             replicas: 1
     flask-service:
         build:
             context: ./flask-service
             dockerfile: Dockerfile
+        depends_on:
+            - "redis"
         ports:
             - '8080:8080'
         volumes:
@@ -19,6 +19,8 @@ services:
         build:
             context: ./worker-service
             dockerfile: Dockerfile
+        depends_on:
+            - "redis"
         volumes:
             - './worker-service:/app'
             - './common-data:/data'
@@ -26,6 +28,17 @@ services:
         build:
             context: ./worker-service
             dockerfile: Dockerfile
+        depends_on:
+            - "redis"
         volumes:
             - './worker-service:/app'
             - './common-data:/data'
+    test_environment:
+        build:
+            context: ./tests
+            dockerfile: Dockerfile
+        volumes:
+            - './tests:/app'
+            - './test-data:/data'
+        stdin_open: true
+        tty: true
