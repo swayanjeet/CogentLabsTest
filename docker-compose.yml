@@ -1,0 +1,26 @@
+version: "3.7"
+services:
+    redis:
+        image: redis:5.0.5-alpine
+        ports:
+                - "6379:6379"
+        deploy:
+                replicas: 1
+    flask-service:
+        build:
+                context: ./flask-service
+                dockerfile: Dockerfile
+        ports:
+                - "8085:8085"
+        volumes:
+                - ./flask-service:/app
+        entrypoint: python /app/app.py
+    worker-service:
+        build:
+                context: ./worker-service
+                dockerfile: Dockerfile
+        volumes:
+                - ./worker-service:/app
+        entrypoint: python /app/app.py
+        network_mode: "host"
+
