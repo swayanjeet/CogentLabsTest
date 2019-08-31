@@ -30,6 +30,7 @@
    The below images corresponds to architectural details.
    ![Architecture Diagram](https://github.com/swayanjeet/CogentLabsTest/blob/master/docs/Architecture.png "Architecture Diagram")
    Brief Explanation of Architecture Diagram:
+   
    * **Upload File API**
    1. User uploads the file through REST APIs.
    2. Flask Container receives the image and stores it in a directory.
@@ -41,9 +42,21 @@
    8. After adding the JSON packet into the PROCESSING SET, the Worker containers start processing the metadata i.e. Once they have the file_id and path of the image, they start re-sizing the images.
    9. After successfully re-sizing the image, Worker containers remove the metadata from the PROCESSING SET and add it into the COMPLETION SET so that we can have a track of which all images have been completed.
    10. The SETS are used only to keep a track of the current states of the files.
+   
    * **Query Stage API**
    1. The Flask API receives the file_id and just performs a look-up on the 3 SETS. 
    2. Wherever the file_id matches, the current state of the file is returned.
    3. If file_id is not found, then "ID NOT FOUND" response is returned to the User.
+
+- How are they connected?
+   * The different containers communicate through the default network which is set up through docker compose command.
+   * Only the Flask API is exposed to the outside world through port "8080" and host-ip address.
+   
+- What libraries/dependencies/tools did you choose and why?
+   * Flask for building REST APIs because its easier to use.
+   * Redis as a message queue and key value storage because i can imtplement a queue as well as set data structure. Also its message queue is easier to implement and can be scaled easily for handling larger loads. Apart from that it has a python client, which is quite easy to implement ans use.
+   
+- Any improvements you would make to the service or tests that go beyond the scope of the assignment -
+   * 
    
    
