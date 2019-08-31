@@ -21,11 +21,13 @@
    3. It will query for the status of a file which is non existent and the API should return "ID NOT FOUND !!"
    4. It will try sending a request without file key in it and check if API returns "file key not found in request"
    
-- An explanation of your architecture
+- An explanation of the architecture
    * The following components are present in the application:
    1. Redis container : This is used for storing the metadata of the images which are currently waiting to be processed, which are currently being processed by the workers and also which have already been processed by the workers.
    2. Flask Application Container : This used for building up the REST APIs which is exposed to User in order to submit the files, check which stage the file is in through the file_id.
    3. Worker Containers : These workers pick up the image metadata from the STAGING queue, process them (re-size the images) and then move them to a completed SET (literally a SET datastructure is implemented in Redis). Currently only 2 worker containers have been set-up for the demo.
    The below images corresponds to architectural details.
+   Inline-style: 
+![alt text](https://github.com/adam-p/markdown-here/raw/master/src/common/images/icon48.png "Logo Title Text 1")
    
 
