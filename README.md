@@ -29,4 +29,15 @@
 
    The below images corresponds to architectural details.
    ![Architecture Diagram](https://github.com/swayanjeet/CogentLabsTest/blob/master/docs/Architecture.png "Architecture Diagram")
-
+   Brief Explanation of Architecture Diagram:
+   * Upload File API
+   1. User uploads the file through REST APIs.
+   2. Flask Container receives the image and stores it in a directory.
+   3. Flask Container then generates a unique file_id for the image and then forms a JSON packet containing the file_id and the path of the image. It then pushes the information into a STAGING SET AND A STAGING QUEUE simultaneously.
+   4. The file_id is then returned to the User along with successfull response so that he can use the file_id to query the current stage of the file.
+   5. STAGING SET is used so that all the file ids present in it can be looked up when user queries for a file.
+   6. Meanwhile, the Worker containers keep polling the STAGING QUEUE. When a JSON packet is found they POP it from the STAGING QUEUE and also delete the same from the STAGING SET. After deleting it, the Worker container checks if it is already present in the PROCESSING SET. If not it adds it and starts processing. If it is already present, then someone else might be processing it, hence current worker node drops the packet and proceeds for the next packet.
+   7. PROCESSING SET is used because even if the worker containers crash messages will be retained in the PROCESSING SET.
+   8. After adding the JSON packet into the PROCESSING SET, the Worker containers start processing the metadata i.e. Once they have the file_id and path of the image, they start re-sizing the images.
+   9. After successfully re-sizing the image, Worker containers remove the metadata from the PROCESSING SET and add it into the COMPLETION SET so that we can have a track of which all images have been completed.
+   10. The SETS are used only to keep a track of the current states of the files.
