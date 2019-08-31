@@ -23,7 +23,9 @@ while current_stage != "COMPLETION STAGE":
 file_id = "2014"
 r = requests.get("{}{}".format(QUERY_FILE_STATUS_URI, file_id))
 print(r.json())
+print(r.status_code)
 
 # Checking file upload API if file key is not present
 r = requests.post(UPLOAD_FILE_URI, files={})
 print(r.json())
+print(r.status_code)

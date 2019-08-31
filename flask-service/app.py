@@ -32,10 +32,11 @@ def query_file_status(file_id):
     if request.method=="GET":
         logger.info("Inside POST request for query_file_status")
         if "file_id" is None:
-            return {"result":"File id is None !!"}, 400
+            return {"result":"File id is None!!"}, 400
         else:
             current_stage = image_queue.return_current_stage_of_file(file_id)
-            if current_stage == "ID NOT FOUND !!":
+            logger.info("Current stage returned from function is {}".format(current_stage))
+            if current_stage == "ID NOT FOUND!!":
                 return {"result":current_stage, "file_id":file_id}, 400
             else:
                 return {"result":current_stage, "file_id":file_id}
