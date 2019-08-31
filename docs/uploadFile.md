@@ -8,10 +8,6 @@ Used to upload images to a message Queue
 
 **Auth required** : NO
 
-**Data constraints**
-
-```file is required as an essential input !!
-```
 
 ## Success Response
 
