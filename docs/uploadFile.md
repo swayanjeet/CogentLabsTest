@@ -32,10 +32,10 @@ with open(FILE_PATH, "rb") as f:
 
 ```json
 {
-    "message":"file key not found in request"
+    "result":"file key not found in request"
 }
 OR
 {
-    "message":"Empty file received"
+    "result":"Empty file received"
 }
 ```
