@@ -1,6 +1,6 @@
 # uploadFile
 
-Used to uploadFiles to a message Queue
+Used to upload images to a message Queue
 
 **URL** : `/uploadFile`
 
@@ -19,11 +19,11 @@ Used to uploadFiles to a message Queue
 
 **Content example**
 
-```json
-{
-    "message": "File Uploaded successfully !!",
-    "file_id": "20195667987090"
-}
+```python
+import requests
+
+with open(FILE_PATH, "rb") as f:
+    r = requests.post(UPLOAD_FILE_URI, files={"file": f})
 ```
 
 ## Error Response
