@@ -57,7 +57,9 @@
    * Redis as a message queue and key value storage because i can imtplement a queue as well as set data structure. Also its message queue is easier to implement and can be scaled easily for handling larger loads. Apart from that it has a python client, which is quite easy to implement ans use.
    
 - Any improvements you would make to the service or tests that go beyond the scope of the assignment -
+   
    * **What would need to change to put your service into production?**
+   
    1. Flask would be hosted on uWSGI server for producation use case.
    2. Also instead of a single Flask container there would be multiple containers communicating to the same redis instance. These containers would be scaled up and down on the basis of load on the external Load Balancer. An external Load balancer would be set-up to route the requests to these Flask containers and these all orchestration and deployment can be done through Kubernetes.
    3. Apart from that we can enable the Rolling deployment feature and health check feature of Kubernetes so as to manage the deployment and monitor the pods.
@@ -65,13 +67,19 @@
    5. Apart from all this, Security has always been an important part of every Application. From the security perspective, we make sure that all the ports of the nodes are closed except the port of the Flask Application. The redis instance port needn't be exposed outside as every container inside docker-compose app can communicate with each other with the help of the default network.
    
    * **How could it be scaled up or down?**
+   
    1. Autoscaling can configured in Kubernetes deployments for both nodes as well pods. So using Kubernetes, we can deploy our application and then configure the deployment for POD as well as node autoscaling.
    
    * **How will it handle a high load of requests?**
+   
    1. If the Flask Application is scaled horizontally based on the load on External Loadbalancer, then it will be able to handle the huge amount of requests. Using Kubernetes, we can configure the flask containers to be horizontally scalable automatically.
    2. The Redis instance also needs to horizontally scaled, so that it doesn't become a bottleneck in the application. We can multiple Redis slave nodes running and communicating to the same master instance. We can also configure these slave PODS(containers) to be automatically horizontally scalable. 
    
-   * **What can you do to monitor and manage your services ?** 
+   * **What can you do to monitor and manage your services ?**
+   
+   1. We can use telegraf agents to collect the metrics from the containers (if deployed alone) or use the telegraf plugin for Kubernetes to collect information about the cluster. The telegraf agents can dump the metrics to Influx DB. 
+   2. Also using the data from Influx DB, we can then have some dashboards in Grafana which may show when the error occured in a particular code, which all packets couldn't pe processed, how many packets are waiting in the queue, how many are completed and so on. We can also have a look at the health metrics of the containers and host-machines. If we are using Kubernetes then we can have a look at the health metrics of the entire cluster and also of the individual PODs.
+   3. Apart from these, we can also have a rate of processing data of different workers by calculating the length PROCESSING QUEUE and COMPLETION QUEUE and the number of packets processed by individual workers. From this information we can also determine the average rate or procesing and then scale the PODs accordingly. 
    
    
    
