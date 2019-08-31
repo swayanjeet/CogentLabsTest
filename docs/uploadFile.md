@@ -38,4 +38,8 @@ Used to uploadFiles to a message Queue
 {
     "message":"file key not found in request"
 }
+OR
+{
+    "message":"Empty file received"
+}
 ```
