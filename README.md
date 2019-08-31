@@ -28,4 +28,5 @@
    3. Worker Containers : These workers pick up the image metadata from the STAGING queue, process them (re-size the images) and then move them to a completed SET (literally a SET datastructure is implemented in Redis). Currently only 2 worker containers have been set-up for the demo.
 
    The below images corresponds to architectural details.
-   <iframe src="https://drive.google.com/file/d/1eHo-tB7VynQI4kNBU2GUgHdMElOoy5Pa/preview" width="640" height="480"></iframe>
+   ![Architecture Diagram](https://github.com/swayanjeet/CogentLabsTest/blob/master/docs/Architecture.png "Architecture Diagram")
+
