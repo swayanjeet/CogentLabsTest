@@ -30,7 +30,7 @@
    The below images corresponds to architectural details.
    ![Architecture Diagram](https://github.com/swayanjeet/CogentLabsTest/blob/master/docs/Architecture.png "Architecture Diagram")
    Brief Explanation of Architecture Diagram:
-   * Upload File API
+   * **Upload File API**
    1. User uploads the file through REST APIs.
    2. Flask Container receives the image and stores it in a directory.
    3. Flask Container then generates a unique file_id for the image and then forms a JSON packet containing the file_id and the path of the image. It then pushes the information into a STAGING SET AND A STAGING QUEUE simultaneously.
@@ -41,3 +41,9 @@
    8. After adding the JSON packet into the PROCESSING SET, the Worker containers start processing the metadata i.e. Once they have the file_id and path of the image, they start re-sizing the images.
    9. After successfully re-sizing the image, Worker containers remove the metadata from the PROCESSING SET and add it into the COMPLETION SET so that we can have a track of which all images have been completed.
    10. The SETS are used only to keep a track of the current states of the files.
+   * **Query Stage API**
+   1. The Flask API receives the file_id and just performs a look-up on the 3 SETS. 
+   2. Wherever the file_id matches, the current state of the file is returned.
+   3. If file_id is not found, then "ID NOT FOUND" response is returned to the User.
+   
+   
