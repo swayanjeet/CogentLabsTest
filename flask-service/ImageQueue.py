@@ -20,6 +20,15 @@ class ImageQueue:
         self.redis_db = redis.StrictRedis(host="redis", port=6379, db=0)
         logger.info("Connected to Redis")
 
+    def return_matches(self, set_name, id):
+        cursor_point, items = self.redis_db.sscan(set_name, 0, match="*{}*".format(id))
+        logger.info("current cursor point : {}, items : {} for set : {}".format(cursor_point, items, set_name))
+        while cursor_point != 0 and len(items)==0:
+            cursor_point, items = self.redis_db.sscan(set_name, cursor_point, match="*{}*".format(id))
+            logger.info("current cursor point : {}, items : {} for set : {}".format(cursor_point, items, set_name))
+        logger.info("final set of matched items : {} for set {}".format(items, set_name))
+        return items
+
     def insert_packet_into_staging_queue(self, packet):
         logger.info("Pushing into Staging SET first")
         if self.redis_db.sadd(STAGING_SET_NAME, json.dumps(packet)):
@@ -37,11 +46,11 @@ class ImageQueue:
 
     def return_current_stage_of_file(self, id):
         logger.info("Finding packet is in which SET")
-        if len(self.redis_db.sscan(STAGING_SET_NAME, 0, match="*{}*".format(id))[1])>0:
+        if len(self.return_matches(STAGING_SET_NAME, id))>0:
             return "STAGING STAGE"
-        elif len(self.redis_db.sscan(PROCESSING_SET_NAME, 0, match="*{}*".format(id))[1])>0:
+        elif len(self.return_matches(PROCESSING_SET_NAME, id))>0:
             return "PROCESSING STAGE"
-        elif len(self.redis_db.sscan(COMPLETION_SET_NAME, 0, match="*{}*".format(id))[1])>0:
+        elif len(self.return_matches(COMPLETION_SET_NAME, id))>0:
             return "COMPLETION STAGE"
         else:
             return "ID NOT FOUND!!"
