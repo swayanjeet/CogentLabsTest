@@ -5,6 +5,7 @@ A file can be in any one of the 3 stages at a time.
 - PROCESSING STAGE
 - COMPLETION STAGE
 - ID NOT FOUND !!
+
 Used to query the current stage of a file. 
 
 **URL** : `/queryFileStatus/:file_id`
