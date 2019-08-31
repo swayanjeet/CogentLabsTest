@@ -22,7 +22,7 @@ Used to query the current stage of a file.
 
 ```json
 {
-    "message": "COMPLETION STAGE",
+    "result": "COMPLETION STAGE",
     "file_id": "20190831130211396194"
 }
 ```
@@ -37,11 +37,11 @@ Used to query the current stage of a file.
 
 ```json
 {
-    "message":"File id is None !!"
+    "result":"File id is None !!"
 }
 OR
 {
-    "message":"ID NOT FOUND !!",
+    "result":"ID NOT FOUND !!",
     "file_id":"2016"
 }
 ```
