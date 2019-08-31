@@ -5,9 +5,10 @@ from PIL import Image
 import json
 import os
 
-PROCESSING_MAP_NAME = "PROCESSING_MAP"
+PROCESSING_SET_NAME = "PROCESSING_SET"
 STAGING_QUEUE_NAME = "STAGING_QUEUE"
-COMPLETION_QUEUE_NAME = "COMPLETION_QUEUE"
+COMPLETION_SET_NAME = "COMPLETION_SET"
+STAGING_SET_NAME = "STAGING_SET"
 
 logging.basicConfig(level=logging.DEBUG)
 
@@ -20,10 +21,13 @@ class Worker:
         logging.info("Starting pop command from queue")
         packet = self.redis_db.lpop(STAGING_QUEUE_NAME)
         logging.info("packet is {}".format(packet))
+        if packet is not None:
+            logging.info("Removing packet from STAGING SET")
+            self.redis_db.srem(STAGING_SET_NAME, packet)
         return packet
     
     def process_packet(self, packet):
-        if self.redis_db.sadd(PROCESSING_MAP_NAME, packet):
+        if self.redis_db.sadd(PROCESSING_SET_NAME, packet):
             logging.info("Packet not present in processing queue")
             logging.info("Processing packet")
             packet_object = json.loads(packet)
@@ -45,10 +49,13 @@ class Worker:
 
     def post_processing_steps(self, packet):
         logging.info("Starting post processing steps")
-        self.redis_db.srem(PROCESSING_MAP_NAME, packet)
-        logging.info("Removing packet from processing map")
-        self.redis_db.lpush(COMPLETION_QUEUE_NAME, packet)
-        logging.info("Pushing it to completion queue")
+        self.redis_db.srem(PROCESSING_SET_NAME, packet)
+        logging.info("Removing packet from processing SET")
+        self.redis_db.sadd(COMPLETION_SET_NAME, packet)
+        logging.info("Pushing it to completion SET")
+    
+    def __del__(self):
+        self.redis_db.quit()
     
     def orchestrate(self):
         while True:
