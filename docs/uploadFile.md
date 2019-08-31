@@ -10,7 +10,7 @@ Used to upload images to a message Queue
 
 **Data constraints**
 
-```Multipart form data
+```file is required as an essential input !!
 ```
 
 ## Success Response
