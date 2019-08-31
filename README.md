@@ -10,5 +10,7 @@
    ```
    docker-compose up -d
    ```
-      After all the containers are up and running, run the command below to run the test script
-      ```docker exec -it test_environment_cg_test python test.py```
+   After all the containers are up and running, run the command below to run the test script
+   ```
+   docker exec -it test_environment_cg_test python test.py
+   ```
