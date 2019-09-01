@@ -66,6 +66,7 @@
    4. Also the Redis instance needs to be upgraded to a Redis cluster so that multiples slave containers run pointing to the same master instance. This will reduce the bottleneck in case of huge loads on backend. Apart from this, we can use helm to deploy the Redis chart in Kubernetes so that scaling, orchestration and deployment becomes smooth and developers can focus on development.
    5. Apart from all this, Security has always been an important part of every Application. From the security perspective, we make sure that all the ports of the nodes are closed except the port of the Flask Application. The redis instance port needn't be exposed outside as every container inside docker-compose app can communicate with each other with the help of the default network.
    6. All the components need to be fault tolerant.For example, let's say the Redis instance goes down(which is a rare scenario), then Workers should attempt the connection for a minimum number of retries and then throw the error.Also if during the processing of a packet, if the Worker encounters an exception, then it should attempt processing the packet for a minimum number retries and then only it should drop it.
+   7. We should also perform a concurrent testing of the integrated application before deployment in production so as to know the breakpoints of the system and this information can also be useful while configuring the autoscalers.
 
    * **How could it be scaled up or down?**
    
