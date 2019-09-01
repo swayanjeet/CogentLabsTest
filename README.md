@@ -23,8 +23,8 @@
    
 - An explanation of the architecture
    * The following components are present in the application:
-   1. Redis container : This is used for storing the metadata of the images which are currently waiting to be processed, also meatdata which are currently being processed by the workers and also which have already been processed by the workers.
-   2. Flask Application Container : This is used for building up the REST APIs which is exposed to User in order to submit the files, check which stage the file is in through the file_id.
+   1. Redis container : This is used for storing the metadata of the images which is currently waiting to be processed, also meatdata which are currently being processed by the workers and also which have already been processed by the workers.
+   2. Flask Application Container : This is used for building up the REST APIs which are exposed to User in order to submit the files, check the current stage of the file through the file_id.
    3. Worker Containers : These workers pick up the image metadata from the STAGING queue, process them (re-size the images) and then move them to a completed SET (literally a SET datastructure is implemented in Redis). Currently only 2 worker containers have been set-up for the demo.
    4. Test environment Container : This container just provides access to all the services and containers inside the default application network so as to run some tests.
 
@@ -36,7 +36,7 @@
    1. User uploads the file through REST APIs.
    2. Flask Container receives the image and stores it in a directory.
    3. Flask Container then generates a unique file_id for the image and then forms a JSON packet containing the file_id and the path of the image. It then pushes the information into a STAGING SET AND A STAGING QUEUE simultaneously.
-   4. The file_id is then returned to the User along with successfull response so that he can use the file_id to query the current stage of the file.
+   4. The file_id is then returned to the User along with successful response so that he can use the file_id to query the current stage of the file.
    5. STAGING SET is used so that all the file ids present in it can be looked up when user queries for a file.
    6. Meanwhile, the Worker containers keep polling the STAGING QUEUE. When a JSON packet is found they POP it from the STAGING QUEUE and also delete the same from the STAGING SET. After deleting it, the Worker container checks if it is already present in the PROCESSING SET. If not it adds it and starts processing. If it is already present, then some woker else might be processing it, hence current worker node drops the packet and proceeds for the next packet.
    7. PROCESSING SET is used because even if the worker containers crash messages will be retained in the PROCESSING SET.
