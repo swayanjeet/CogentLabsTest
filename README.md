@@ -26,6 +26,7 @@
    1. Redis container : This is used for storing the metadata of the images which are currently waiting to be processed, also meatdata which are currently being processed by the workers and also which have already been processed by the workers.
    2. Flask Application Container : This is used for building up the REST APIs which is exposed to User in order to submit the files, check which stage the file is in through the file_id.
    3. Worker Containers : These workers pick up the image metadata from the STAGING queue, process them (re-size the images) and then move them to a completed SET (literally a SET datastructure is implemented in Redis). Currently only 2 worker containers have been set-up for the demo.
+   4. Test environment Container : This container just provides access to all the services and containers inside the default application network so as to run some tests.
 
    The below images corresponds to architectural details.
    ![Architecture Diagram](https://github.com/swayanjeet/CogentLabsTest/blob/master/docs/Architecture.png "Architecture Diagram")
@@ -67,6 +68,7 @@
    5. Apart from all this, Security has always been an important part of every Application. From the security perspective, we make sure that all the ports of the nodes are closed except the port of the Flask Application. The redis instance port needn't be exposed outside as every container inside docker-compose app can communicate with each other with the help of the default network.
    6. All the components need to be fault tolerant.For example, let's say the Redis instance goes down(which is a rare scenario), then Workers should attempt the connection for a minimum number of retries and then throw the error.Also if during the processing of a packet, if the Worker encounters an exception, then it should attempt processing the packet for a minimum number retries and then only it should drop it.
    7. We should also perform a concurrent testing of the integrated application before deployment in production so as to know the breakpoints of the system and this information can also be useful while configuring the autoscalers.
+   8. Also discussions on how to handle edge cases like let's say what happens when the user queries for a file and at the same moment file is being deleted from one queue and hasn't been added into the next queue (Currently the API says "ID NOT FOUND") should also be taken into consideration.
 
    * **How could it be scaled up or down?**
    
