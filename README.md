@@ -79,8 +79,7 @@
    
    1. We can use telegraf agents to collect the metrics from the containers (if deployed alone) or use the telegraf plugin for Kubernetes to collect information about the cluster. The telegraf agents can dump the metrics to Influx DB. 
    2. Also using the data from Influx DB, we can then have some dashboards in Grafana which may show when the error occured in a particular piece of code, which all packets couldn't pe processed, how many packets are waiting in the queue, how many are completed and so on. We can also have a look at the health metrics of the containers and host-machines. If we are using Kubernetes then we can have a look at the health metrics of the entire cluster and also of the individual PODs.
-   3. Apart from these, we can also have a rate of processing data of different workers by calculating the length of PROCESSING QUEUE and COMPLETION QUEUE and the number of packets processed by individual workers. From this information we can also determine the average rate or processing and then scale the PODs accordingly.
-   4. Also we can configure Alerts in Grafana Dashboards, so that if a container goes down because of some issue or if the memory usage is even high after being autoscaled or lets say the disk space is low then we can be notified via emails, text-messages with the help of PagerTree integration.
-   
+   3. Apart from these, we can also have a rate of processing data of different workers by calculating the length of PROCESSING QUEUE and COMPLETION QUEUE and the number of packets processed by individual workers. From this information we can also determine the average rate of processing and then scale the PODs accordingly.
+   4. Also we can configure Alerts in Grafana Dashboards, so that if a container goes down because of some issue or if the memory usage is even high after being autoscaled or lets say the disk space is low then we can be notified via emails, text-messages with the help of PagerTree integration
    
    
