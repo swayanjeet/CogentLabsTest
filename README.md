@@ -1,4 +1,4 @@
-# CogentLabs Test
+# CogentLabs Test Assignment by Swayan
 
 - What API endpoints are available and how to use them ?
     * [Upload File API](docs/uploadFile.md) : `POST /uploadFile`
